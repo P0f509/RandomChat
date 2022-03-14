@@ -19,9 +19,9 @@
 #define SEARCH_FRIEND_COMMAND "SRC"
 #define SEND_MESSAGE_COMMAND "SND"
 
-#define FRIEND_FIND_CODE "201\n"
-#define FRIEND_NOT_FIND_CODE "204\n"
-#define CLIENT_ERR_CODE "400\n"
+#define FRIEND_FIND_CODE "201"
+#define FRIEND_NOT_FIND_CODE "204"
+#define CLIENT_ERR_CODE "400"
 #define ROOM_INFO_CODE "205"
 
 
@@ -132,6 +132,7 @@ void *handle_connection(void *arg) {
           printf("No user available for %s\n", client->nickname);
 
           strcpy(buffer_out, FRIEND_NOT_FIND_CODE);
+          strcat(buffer_out, "\n");
           write(client->sd, buffer_out, strlen(buffer_out));
 
         }else {
@@ -139,6 +140,7 @@ void *handle_connection(void *arg) {
           printf("%s is matching with %s\n", client->nickname, (client->friend)->nickname);
           strcpy(buffer_out, FRIEND_FIND_CODE);
           strcat(buffer_out, (client->friend)->nickname);
+          strcat(buffer_out, "\n");
           write(client->sd, buffer_out, strlen(buffer_out));
 
         }
@@ -158,6 +160,7 @@ void *handle_connection(void *arg) {
           free(msg);
         }else {
           strcpy(buffer_out, FRIEND_NOT_FIND_CODE);
+          strcat(buffer_out, "\n");
           write(client->sd, buffer_out, strlen(buffer_out));
         }
         
@@ -169,11 +172,11 @@ void *handle_connection(void *arg) {
     }  
   }
 
+  printf("%s left the app!\n", client->nickname);
   leave_chat(client);
   remove_client(client);
   close(client->sd);
   free(client);
-  printf("%s left the app!\n", client->nickname);
   pthread_exit(0);
 
 }
@@ -283,8 +286,9 @@ char *parse_message(char *str) {
 void leave_chat(struct Client *c) {
   
   if(c->friend != NULL) {
-    char response_info[4];
+    char response_info[5];
     strcpy(response_info, FRIEND_NOT_FIND_CODE);
+    strcat(response_info, "\n");
     write((c->friend)->sd, response_info, strlen(response_info));
     (c->friend)->friend = NULL;
     c->friend = NULL;
@@ -303,8 +307,9 @@ void leave_chat(struct Client *c) {
 */
 
 void send_error_to(struct Client *c) {
-  char response_code[4];
+  char response_code[5];
   strcpy(response_code, CLIENT_ERR_CODE);
+  strcat(response_code, "\n");
   write(c->sd, response_code, strlen(response_code));
 }
 
@@ -326,7 +331,7 @@ void send_broadcast(char *msg) {
 
 char *get_room_info() {
   pthread_mutex_lock(&room_mutex);
-  char *buffer = malloc(sizeof(char) * (ROOM_NUM+3));
+  char *buffer = malloc(sizeof(char) * (ROOM_NUM+4));
   strcpy(buffer, ROOM_INFO_CODE);
 
   for(int i = 0; i < ROOM_NUM; ++i) {
@@ -335,7 +340,7 @@ char *get_room_info() {
     strcat(buffer, room_size);
   }
   
-  strcat(buffer, '\n');
+  strcat(buffer, "\n");
   pthread_mutex_unlock(&room_mutex);
   return buffer;
 } 
