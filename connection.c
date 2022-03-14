@@ -19,9 +19,9 @@
 #define SEARCH_FRIEND_COMMAND "SRC"
 #define SEND_MESSAGE_COMMAND "SND"
 
-#define FRIEND_FIND_CODE "201"
-#define FRIEND_NOT_FIND_CODE "204"
-#define CLIENT_ERR_CODE "400"
+#define FRIEND_FIND_CODE "201\n"
+#define FRIEND_NOT_FIND_CODE "204\n"
+#define CLIENT_ERR_CODE "400\n"
 #define ROOM_INFO_CODE "205"
 
 
@@ -334,7 +334,8 @@ char *get_room_info() {
     sprintf(room_size, "%d", rooms_size[i]);
     strcat(buffer, room_size);
   }
-
+  
+  strcat(buffer, '\n');
   pthread_mutex_unlock(&room_mutex);
   return buffer;
 } 
