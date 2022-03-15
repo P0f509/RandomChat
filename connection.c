@@ -19,10 +19,12 @@
 #define SEARCH_FRIEND_COMMAND "SRC"
 #define SEND_MESSAGE_COMMAND "SND"
 
+#define ROOM_INFO_CODE "100"
 #define FRIEND_FIND_CODE "201"
+#define FRIEND_MESSAGE_CODE "202"
 #define FRIEND_NOT_FIND_CODE "204"
+#define FRIEND_LEAVE_CODE "300"
 #define CLIENT_ERR_CODE "400"
-#define ROOM_INFO_CODE "205"
 
 
 
@@ -275,8 +277,10 @@ char *parse_message(char *str) {
   memcpy(str_size, str, index);
   int len = atoi(str_size);
 
-  char *msg = malloc(sizeof(char)*len);
+  char *msg = malloc(sizeof(char)*(len+4));
+  strcpy(msg, FRIEND_MESSAGE_CODE);
   memcpy(msg, &str[index+1], len);
+  strcat(msg, "\n");
 
   return msg;
 
@@ -287,7 +291,7 @@ void leave_chat(struct Client *c) {
   
   if(c->friend != NULL) {
     char response_info[5];
-    strcpy(response_info, FRIEND_NOT_FIND_CODE);
+    strcpy(response_info, FRIEND_LEAVE_CODE);
     strcat(response_info, "\n");
     write((c->friend)->sd, response_info, strlen(response_info));
     (c->friend)->friend = NULL;
