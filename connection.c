@@ -277,9 +277,9 @@ char *parse_message(char *str) {
   memcpy(str_size, str, index);
   int len = atoi(str_size);
 
-  char *msg = malloc(sizeof(char)*(len+4));
+  char *msg = malloc(sizeof(char)*(len+5));
   strcpy(msg, FRIEND_MESSAGE_CODE);
-  memcpy(msg, &str[index+1], len);
+  memcpy(msg+3, &str[index+1], len);
   strcat(msg, "\n");
 
   return msg;
