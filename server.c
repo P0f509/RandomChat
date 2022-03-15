@@ -7,13 +7,6 @@
 #include <arpa/inet.h>
 #include "connection.h"
 
-//@TODO 
-/*
-
-  1)HANDLE CONNECTION TOO LONG
-  2)CHECK ARGUMENT WITH "SRC" & "SND" 
-  
-*/
 
 int main(int argc, char** argv) {
   
