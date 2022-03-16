@@ -27,7 +27,10 @@
 #define CLIENT_ERR_CODE "400"
 
 
-
+/*
+   1) FRAGMENT HANDLE CONNECTION
+   2) THREAD FOR SEARCH FRIEND
+*/
 struct Client{
   char nickname[NICK_LEN];
   int sd;
@@ -204,6 +207,9 @@ void remove_client(struct Client *c) {
   pthread_mutex_lock(&clients_mutex);
   for(int i = 0; i < MAX_CLIENTS; ++i) {
     if(clients[i] != NULL && clients[i] == c) {
+      if(c->last_friend != NULL) {
+        (c->last_friend)->last_friend = NULL;
+      }
       clients[i] = NULL;
       break; 
     }
