@@ -27,10 +27,7 @@
 #define CLIENT_ERR_CODE "400"
 
 
-/*
-   1) FRAGMENT HANDLE CONNECTION
-   2) THREAD FOR SEARCH FRIEND
-*/
+
 struct Client{
   char nickname[NICK_LEN];
   int sd;
@@ -61,6 +58,8 @@ void remove_client(struct Client *c);
 
 int search_friend(struct Client *c);
 char *parse_message(char *str);
+
+void search_chat(struct Client *client);
 void leave_chat(struct Client *c);
 
 void send_error_to(struct Client *c);
@@ -110,10 +109,10 @@ void *handle_connection(void *arg) {
 
       char command[4] = {buffer_in[0], buffer_in[1], buffer_in[2], '\0'};
 
-      if(strcmp(command, SEARCH_FRIEND_COMMAND) == 0) {                                          
+      if(strcmp(command, SEARCH_FRIEND_COMMAND) == 0) {     
 
         /*EXPECTED: SRC <num> WHERE num is ROOM NUMBER*/
-        if(n < 5) {                                  
+        if(n < 5 || client->friend != NULL) {                                  
           send_error_to(client);
           continue;
         }
@@ -124,31 +123,10 @@ void *handle_connection(void *arg) {
           continue;
         }
 
-        client->searching_room = searching_room;
+        client->searching_room = searching_room;   
         increaseNsend_room(searching_room);
-        
         printf("%s is searching a friend...\n", client->nickname);
-        int found = search_friend(client);
-
-        if(!found) {
-
-          decreaseNsend_room(client->searching_room);
-
-          printf("No user available for %s\n", client->nickname);
-
-          strcpy(buffer_out, FRIEND_NOT_FIND_CODE);
-          strcat(buffer_out, "\n");
-          write(client->sd, buffer_out, strlen(buffer_out));
-
-        }else {
-
-          printf("%s is matching with %s\n", client->nickname, (client->friend)->nickname);
-          strcpy(buffer_out, FRIEND_FIND_CODE);
-          strcat(buffer_out, (client->friend)->nickname);
-          strcat(buffer_out, "\n");
-          write(client->sd, buffer_out, strlen(buffer_out));
-
-        }
+        search_chat(client);                                 
 
       }else if(strcmp(command, SEND_MESSAGE_COMMAND) == 0) {
 
@@ -163,12 +141,12 @@ void *handle_connection(void *arg) {
           printf("%s is sending a message to %s\n", client->nickname, (client->friend)->nickname);
           write((client->friend)->sd, msg, strlen(msg));
           free(msg);
-        }else {
-          strcpy(buffer_out, FRIEND_NOT_FIND_CODE);
-          strcat(buffer_out, "\n");
-          write(client->sd, buffer_out, strlen(buffer_out));
+          continue;
         }
-        
+
+        strcpy(buffer_out, FRIEND_NOT_FIND_CODE);
+        strcat(buffer_out, "\n");
+        write(client->sd, buffer_out, strlen(buffer_out));
 
       }else if(strcmp(command, LEAVE_CHAT_COMMAND) == 0) {
         leave_chat(client);
@@ -236,7 +214,8 @@ int search_friend(struct Client *c) {
     pthread_mutex_lock(&clients_mutex);
     if(!c->is_searching) {
       pthread_mutex_unlock(&clients_mutex);
-      return 1;
+      is_found = 1;
+      goto end;
     }
     for(int i = 0; i < MAX_CLIENTS; ++i) {
       if(clients[i] != NULL && clients[i] != c && clients[i]->is_searching) {
@@ -253,7 +232,7 @@ int search_friend(struct Client *c) {
       }
     }
     pthread_mutex_unlock(&clients_mutex);
-    if(is_found) break;
+    if(is_found) goto end;
     sleep(2);
     time(&end_time);
     search_time = difftime(end_time, start_time);
@@ -269,6 +248,7 @@ int search_friend(struct Client *c) {
     pthread_mutex_unlock(&clients_mutex);
   }
 
+  end:
   return is_found;
 
 }
@@ -293,9 +273,33 @@ char *parse_message(char *str) {
 }
 
 
+void search_chat(struct Client *client) {
+
+  char buffer_out[NICK_LEN+5];
+  int found = search_friend(client);
+
+  if(!found) {
+    decreaseNsend_room(client->searching_room);
+    printf("No user available for %s\n", client->nickname);
+    strcpy(buffer_out, FRIEND_NOT_FIND_CODE);
+    strcat(buffer_out, "\n");
+    write(client->sd, buffer_out, strlen(buffer_out));
+    return;
+  }
+
+  printf("%s is matching with %s\n", client->nickname, (client->friend)->nickname);
+  strcpy(buffer_out, FRIEND_FIND_CODE);
+  strcat(buffer_out, (client->friend)->nickname);
+  strcat(buffer_out, "\n");
+  write(client->sd, buffer_out, strlen(buffer_out));
+
+}
+
+
 void leave_chat(struct Client *c) {
   
   if(c->friend != NULL) {
+    printf("%s is leaving the chat with %s\n", c->nickname, (c->friend)->nickname);
     char response_info[5];
     strcpy(response_info, FRIEND_LEAVE_CODE);
     strcat(response_info, "\n");
@@ -303,10 +307,7 @@ void leave_chat(struct Client *c) {
     (c->friend)->friend = NULL;
     c->friend = NULL;
     decrease_room_clients(c->searching_room);
-    decrease_room_clients(c->searching_room);
-    char *room_info = get_room_info();
-    send_broadcast(room_info);
-    free(room_info);
+    decreaseNsend_room(c->searching_room);
   }
   
 }
