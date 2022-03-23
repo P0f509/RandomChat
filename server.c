@@ -17,7 +17,7 @@ int main(int argc, char** argv) {
 
   printf("Starting server...\n");
 
-  const char* ip = "20.203.213.230";
+  const char* ip = "10.0.0.4";
   int port = atoi(argv[1]);
 
   pthread_t tid;
