@@ -83,7 +83,6 @@ void *handle_connection(void *arg) {
   int leave_flag = 0;
   struct Client *client = malloc(sizeof(struct Client));
   client->sd = *((int *)arg);
-  add_client(client);
 
   int n = read(client->sd, buffer_in, NICK_LEN);
   if(n <= 0) {
@@ -95,6 +94,8 @@ void *handle_connection(void *arg) {
     write(client->sd, room_info, strlen(room_info));
     free(room_info);
   }
+  
+  add_client(client);
 
   while(!leave_flag) {
 
@@ -258,12 +259,12 @@ char *parse_message(char *str) {
 
   char *ptr = strchr(str, ' ');
   int index = ptr - str;
-
-  char str_size[3];
+  printf("index is %d\n", index);
+  char str_size[index];
   memcpy(str_size, str, index);
   int len = atoi(str_size);
 
-  char *msg = malloc(sizeof(char)*(len+5));
+  char *msg = malloc(sizeof(char)*(len+4));
   strcpy(msg, FRIEND_MESSAGE_CODE);
   memcpy(msg+3, &str[index+1], len);
   strcat(msg, "\n");
