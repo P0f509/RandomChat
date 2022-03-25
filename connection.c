@@ -143,10 +143,11 @@ void *handle_connection(void *arg) {
       
       if(client->friend != NULL) {
         char *msg = parse_message(&buffer_in[4]);
-        printf("IN: %s\n", buffer_in);
-        printf("%s\n", msg);
+        strcpy(buffer_out, FRIEND_MESSAGE_CODE);
+        strcat(buffer_out, msg);
+        strcat(buffer_out, "\n");
         printf("%s is sending a message to %s\n", client->nickname, (client->friend)->nickname);
-        write((client->friend)->sd, msg, strlen(msg));
+        write((client->friend)->sd, buffer_out, strlen(buffer_out));
         free(msg);
         continue;
       }
@@ -271,11 +272,10 @@ char *parse_message(char *str) {
   memcpy(str_size, str, index);
   int len = atoi(str_size);
 
-  char *msg = malloc(sizeof(char)*(len+4));
-  strcpy(msg, FRIEND_MESSAGE_CODE);
-  memcpy(msg+3, &str[index+1], len);
-  strcat(msg, "\n");
-
+  char *msg = malloc(sizeof(char)*len);
+  memset(msg, 0, len);
+  memcpy(msg, &str[index+1], len);
+  
   return msg;
 
 }
