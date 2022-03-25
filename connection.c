@@ -143,6 +143,7 @@ void *handle_connection(void *arg) {
       
       if(client->friend != NULL) {
         char *msg = parse_message(&buffer_in[4]);
+        printf("IN: %s\n", buffer_in);
         printf("%s\n", msg);
         printf("%s is sending a message to %s\n", client->nickname, (client->friend)->nickname);
         write((client->friend)->sd, msg, strlen(msg));
