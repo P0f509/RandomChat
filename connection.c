@@ -194,7 +194,7 @@ void add_client(struct Client *c) {
   (*ptr)->next = NULL;
   pthread_mutex_unlock(&clients_mutex);
   //DELETE
-  Node * iter = head;
+  struct Node *iter = head;
   int size = 0;
   while(iter != NULL) {
     size++;
@@ -223,7 +223,8 @@ void remove_client(struct Client *c) {
     free(ptr);
   }
   pthread_mutex_unlock(&clients_mutex);
-  Node * iter = head;
+  //del
+  struct Node *iter = head;
   int size = 0;
   while(iter != NULL) {
     size++;
