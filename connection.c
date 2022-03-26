@@ -200,7 +200,7 @@ void remove_client(struct Client *c) {
   pthread_mutex_lock(&clients_mutex);
   if(c->last_friend != NULL) {
     (c->last_friend)->last_friend = NULL;
-    c->last_friend = null;
+    c->last_friend = NULL;
   }
   struct Node *ptr = head;
   struct Node *pre = NULL;
