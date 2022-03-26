@@ -199,6 +199,7 @@ void add_client(struct Client *c) {
   while(iter != NULL) {
     size++;
     printf("User %d: %s\n", size, iter->client->nickname);
+    iter = iter->next;
   }
   //END
 }
@@ -229,6 +230,7 @@ void remove_client(struct Client *c) {
   while(iter != NULL) {
     size++;
     printf("User %d: %s\n", size, iter->client->nickname);
+    iter = iter->next;
   }
 }
 
