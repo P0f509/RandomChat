@@ -56,6 +56,9 @@ int main(int argc, char** argv) {
 
     socklen_t client_len = sizeof(client_addr);
     client_sd = accept(listen_sd, (struct sockaddr *) &client_addr, &client_len);
+    
+    int flag = 1;
+    setsockopt(client_sd, SOL_SOCKET, SO_KEEPALIVE, (void *)&flag, sizeof(flag));
 
     printf("***New Connection accepted.\n");
    
