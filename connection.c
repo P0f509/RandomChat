@@ -193,6 +193,14 @@ void add_client(struct Client *c) {
   (*ptr)->client = c;
   (*ptr)->next = NULL;
   pthread_mutex_unlock(&clients_mutex);
+  //DELETE
+  Node * iter = head;
+  int size = 0;
+  while(iter != NULL) {
+    size++;
+    printf("User %d: %s\n", size, iter->client->nickname);
+  }
+  //END
 }
 
 
@@ -215,6 +223,12 @@ void remove_client(struct Client *c) {
     free(ptr);
   }
   pthread_mutex_unlock(&clients_mutex);
+  Node * iter = head;
+  int size = 0;
+  while(iter != NULL) {
+    size++;
+    printf("User %d: %s\n", size, iter->client->nickname);
+  }
 }
 
 
@@ -242,6 +256,10 @@ int search_friend(struct Client *c) {
     struct Node *ptr = head;
     while(ptr != NULL) {
       struct Client *curr = ptr->client;
+      printf("EXAMINE %s\n", curr->nickname);
+      if(c->last_friend != NULL) {
+        printf("Last client %s\n", c->last_friend->nickname);
+      }
       if(curr->is_searching && curr != c && curr->searching_room == c->searching_room && c->last_friend != curr) {
         is_found = 1;
         c->is_searching = 0;
