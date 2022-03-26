@@ -169,9 +169,9 @@ void *handle_connection(void *arg) {
     
   }
 
-  printf("%s left the app!\n", client->nickname);
   leave_chat(client);
   remove_client(client);
+  printf("%s left the app!\n", client->nickname);
   close(client->sd);
   free(client);
   pthread_exit(0);
@@ -193,20 +193,15 @@ void add_client(struct Client *c) {
   (*ptr)->client = c;
   (*ptr)->next = NULL;
   pthread_mutex_unlock(&clients_mutex);
-  //DELETE
-  struct Node *iter = head;
-  int size = 0;
-  while(iter != NULL) {
-    size++;
-    printf("User %d: %s\n", size, iter->client->nickname);
-    iter = iter->next;
-  }
-  //END
 }
 
 
 void remove_client(struct Client *c) {
   pthread_mutex_lock(&clients_mutex);
+  if(c->last_friend != NULL) {
+    (c->last_friend)->last_friend = NULL;
+    c->last_friend = null;
+  }
   struct Node *ptr = head;
   struct Node *pre = NULL;
   while(ptr != NULL && ptr->client != c) {
@@ -224,14 +219,6 @@ void remove_client(struct Client *c) {
     free(ptr);
   }
   pthread_mutex_unlock(&clients_mutex);
-  //del
-  struct Node *iter = head;
-  int size = 0;
-  while(iter != NULL) {
-    size++;
-    printf("User %d: %s\n", size, iter->client->nickname);
-    iter = iter->next;
-  }
 }
 
 
@@ -259,10 +246,6 @@ int search_friend(struct Client *c) {
     struct Node *ptr = head;
     while(ptr != NULL) {
       struct Client *curr = ptr->client;
-      printf("EXAMINE %s\n", curr->nickname);
-      if(c->last_friend != NULL) {
-        printf("Last client %s\n", c->last_friend->nickname);
-      }
       if(curr->is_searching && curr != c && curr->searching_room == c->searching_room && c->last_friend != curr) {
         is_found = 1;
         c->is_searching = 0;
