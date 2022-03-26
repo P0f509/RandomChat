@@ -10,7 +10,6 @@
 #include <arpa/inet.h>
 
 
-#define MAX_CLIENTS 100
 #define BUFF_SIZE 512
 #define NICK_LEN 20
 #define ROOM_NUM 5
@@ -29,7 +28,7 @@
 
 
 
-struct Client{
+struct Client {
   char nickname[NICK_LEN];
   int sd;
   int is_searching;
@@ -39,12 +38,17 @@ struct Client{
   struct Client *last_friend;
 };
 
+struct Node {
+  struct Client *client;
+  struct Node *next;
+};
+
 
 /******************
 * Global Variables
 */
 
-struct Client *clients[MAX_CLIENTS];
+struct Node *head = NULL;
 int rooms_size[ROOM_NUM] = {0};
 pthread_mutex_t clients_mutex = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t room_mutex = PTHREAD_MUTEX_INITIALIZER;
@@ -84,7 +88,7 @@ void *handle_connection(void *arg) {
 
   pthread_t search_thread;
 
-  struct Client *client = malloc(sizeof(struct Client));
+  struct Client *client = (struct Client *)malloc(sizeof(struct Client));
   client->sd = *((int *)arg);
 
   if(read(client->sd, buffer_in, NICK_LEN) <= 0) {
@@ -181,26 +185,34 @@ void *handle_connection(void *arg) {
 
 void add_client(struct Client *c) {
   pthread_mutex_lock(&clients_mutex);
-  for(int i = 0; i < MAX_CLIENTS; ++i) {
-    if(clients[i] == NULL) {
-      clients[i] = c;
-      break;
-    }
+  struct Node **ptr = &head;
+  while(*ptr != NULL) {
+    ptr = &((*ptr)->next);
   }
+  (*ptr) = (struct Node *)malloc(sizeof(struct Node));
+  (*ptr)->client = c;
+  (*ptr)->next = NULL;
   pthread_mutex_unlock(&clients_mutex);
 }
 
 
 void remove_client(struct Client *c) {
   pthread_mutex_lock(&clients_mutex);
-  for(int i = 0; i < MAX_CLIENTS; ++i) {
-    if(clients[i] != NULL && clients[i] == c) {
-      if(c->last_friend != NULL) {
-        (c->last_friend)->last_friend = NULL;
-      }
-      clients[i] = NULL;
-      break; 
+  struct Node *ptr = head;
+  struct Node *pre = NULL;
+  while(ptr != NULL && ptr->client != c) {
+    pre = ptr;
+    ptr = ptr->next;
+  }
+  if(ptr != NULL) {
+    if(ptr == head) {
+      head = head->next;
+    }else {
+      pre->next = ptr->next;
     }
+    ptr->next = NULL;
+    ptr->client = NULL;
+    free(ptr);
   }
   pthread_mutex_unlock(&clients_mutex);
 }
@@ -227,19 +239,20 @@ int search_friend(struct Client *c) {
       is_found = 1;
       goto end;
     }
-    for(int i = 0; i < MAX_CLIENTS; ++i) {
-      if(clients[i] != NULL && clients[i] != c && clients[i]->is_searching) {
-        if(clients[i]->searching_room == c->searching_room && clients[i] != c->last_friend) {
-          is_found = 1;
-          c-> is_searching = 0;
-          clients[i]->is_searching = 0;
-          c->friend = clients[i];
-          clients[i]->friend = c;
-          c->last_friend = clients[i];
-          clients[i]->last_friend = c;
-          break;
-        }
+    struct Node *ptr = head;
+    while(ptr != NULL) {
+      struct Client *curr = ptr->client;
+      if(curr->is_searching && curr != c && curr->searching_room == c->searching_room && c->last_friend != curr) {
+        is_found = 1;
+        c->is_searching = 0;
+        curr->is_searching = 0;
+        c->friend = curr;
+        curr->friend = c;
+        c->last_friend = curr;
+        curr->last_friend = c;
+        break;
       }
+      ptr = ptr->next;
     }
     pthread_mutex_unlock(&clients_mutex);
     if(is_found) goto end;
@@ -247,7 +260,7 @@ int search_friend(struct Client *c) {
     time(&end_time);
     search_time = difftime(end_time, start_time);
 
-  }while(search_time < 20 && !c->leave_flag);
+  }while(search_time < 60 && !c->leave_flag);
 
   if(c->is_searching) {
     pthread_mutex_lock(&clients_mutex);
@@ -353,10 +366,10 @@ void send_error_to(struct Client *c) {
 
 void send_broadcast(char *msg) {
   pthread_mutex_lock(&clients_mutex);
-  for(int i = 0; i < MAX_CLIENTS; ++i) {
-    if(clients[i] != NULL) {
-      write(clients[i]->sd, msg, strlen(msg));
-    }
+  struct Node *ptr = head;
+  while(ptr != NULL) {
+    write((ptr->client)->sd, msg, strlen(msg));
+    ptr = ptr->next;
   }
   pthread_mutex_unlock(&clients_mutex);
 }

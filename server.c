@@ -7,6 +7,8 @@
 #include <arpa/inet.h>
 #include "connection.h"
 
+#define MAX_CLIENTS 100
+
 
 int main(int argc, char** argv) {
   
