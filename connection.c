@@ -240,7 +240,7 @@ int search_friend(struct Client *c) {
     pthread_mutex_lock(&clients_mutex);
     if(!c->is_searching) {
       pthread_mutex_unlock(&clients_mutex);
-      is_found = 1;
+      is_found = 2;
       goto end;
     }
     struct Node *ptr = head;
@@ -269,7 +269,7 @@ int search_friend(struct Client *c) {
   if(c->is_searching) {
     pthread_mutex_lock(&clients_mutex);
     if(c->is_searching == 0) {
-      is_found = 1;
+      is_found = 2;
     }
     c->is_searching = 0;
     pthread_mutex_unlock(&clients_mutex);
@@ -324,13 +324,18 @@ void *search_chat(void *arg) {
     strcat(buffer_out, "\n");
     write(client->sd, buffer_out, strlen(buffer_out));
     
-  }else {
+  }else if(found == 1) {
 
     printf("%s is matching with %s\n", client->nickname, (client->friend)->nickname);
     strcpy(buffer_out, FRIEND_FIND_CODE);
     strcat(buffer_out, (client->friend)->nickname);
     strcat(buffer_out, "\n");
     write(client->sd, buffer_out, strlen(buffer_out));
+    memset(buffer_out, 0, BUFF_SIZE);
+    strcpy(buffer_out, FRIEND_FIND_CODE);
+    strcat(buffer_out, client->nickname);
+    strcat(buffer_out, "\n");
+    write((client->friend)->sd, buffer_out, strlen(buffer_out));
 
   }
 
