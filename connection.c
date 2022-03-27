@@ -331,7 +331,7 @@ void *search_chat(void *arg) {
     strcat(buffer_out, (client->friend)->nickname);
     strcat(buffer_out, "\n");
     write(client->sd, buffer_out, strlen(buffer_out));
-    memset(buffer_out, 0, BUFF_SIZE);
+    memset(buffer_out, 0, NICK_LEN+5);
     strcpy(buffer_out, FRIEND_FIND_CODE);
     strcat(buffer_out, client->nickname);
     strcat(buffer_out, "\n");
