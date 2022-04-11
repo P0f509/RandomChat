@@ -1,0 +1,57 @@
+<resources>
+    <string name="app_name">Chat Roulette</string>
+
+    <!-- WELCOME ACTIVITY -->
+    <string name="welcome_image_description">Welcome image</string>
+    <string name="welcome_text_2">Esplora i tuoi interessi\ne conosci nuove persone.</string>
+    <string name="button_enter">Entra</string>
+    <string name="nickname_text">Nickname</string>
+    <string name="nickname_length_error">Inserisci un nickname</string>
+    <string name="nickname_spaces_error">Evita di inserire spazi</string>
+
+    <!-- HOME ACTIVITY -->
+    <string name="loading_search_text">Attendi\nStiamo cercando un utente</string>
+    <string name="icon_room_description">Image for chatting room</string>
+    <string name="room_tab_text">Stanze</string>
+    <string name="last_chats_tab_text">Ultime chat</string>
+    <string name="profile_tab_text">Profilo</string>
+    <string-array name="rooms_names">
+        <item>Games</item>
+        <item>Music</item>
+        <item>Movie</item>
+        <item>Sport</item>
+        <item>Food</item>
+    </string-array>
+    <string-array name="rooms_descriptions">
+        <item>Hai giocato l\'ultima\nuscita?</item>
+        <item>Condividi la musica\nche ami</item>
+        <item>Cinema, che passione</item>
+        <item>Che bomba quell\'azione!</item>
+        <item>Solo per i più golosi…</item>
+    </string-array>
+    <string name="no_last_chat">Wow che vuoto!</string>
+    <string name="profile_icon_description">Profile icon</string>
+    <string name="work_progress_description">Work in progress image</string>
+    <string name="work_progress_text">Work in progress</string>
+    <string name="coming_soon_text">Coming Soon!</string>
+    <string name="cancel_text">Annulla</string>
+
+
+    <!-- MESSAGES ACTIVITY -->
+    <string name="chatting_text">Chatting with</string>
+    <string name="leave_chat_confirm_text">Vuoi davvero abbandonare la chat?</string>
+    <string name="message_hint">Scrivi qualcosa…</string>
+    <string name="no_text">No</string>
+    <string name="yes_text">Si</string>
+    <string name="chat_button_description">For sending messages</string>
+    <string name="message_too_long">Il messaggio è troppo lungo</string>
+    <string name="request_mic_permission">Devi accettare per poter utilizzare il microfono</string>
+
+    <!-- INFO MESSAGES -->
+    <string name="generic_error_text">Something went wrong, try again later</string>
+    <string name="friend_leave_text">L\'utente ha lasciato la chat</string>
+    <string name="friend_not_found">Nessun utente trovato</string>
+
+
+
+</resources>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:background="@drawable/rounded_dialog"
+    android:padding="40dp">
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/waitingAnimation"
+        android:layout_width="200dp"
+        android:layout_height="160dp"
+        app:lottie_rawRes="@raw/animation_loading_messages"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        app:lottie_speed="0.4"/>
+
+    <TextView
+        android:id="@+id/loadingTextView1"
+        android:text="@string/loading_search_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textColor="@color/primary"
+        android:fontFamily="@font/euclid_circular_medium"
+        android:textSize="20sp"
+        android:layout_marginBottom="10dp"/>
+
+    <TextView
+        android:id="@+id/loadingTextView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textColor="@color/primary"
+        android:fontFamily="@font/euclid_circular_regular"
+        android:textSize="22sp"
+        android:layout_marginBottom="20dp"/>
+
+    <Button
+        android:id="@+id/exit_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:backgroundTint="@color/error"
+        android:text="@string/cancel_text"/>
+
+
+
+</LinearLayout>

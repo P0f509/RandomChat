@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary">#FF567DF4</color>
+    <color name="primary_light">#1A567DF4</color>
+    <color name="ripple">#FF7D6FE0</color>
+    <color name="error">#FFF50057</color>
+    <color name="success">#FF00BFA6</color>
+</resources>
