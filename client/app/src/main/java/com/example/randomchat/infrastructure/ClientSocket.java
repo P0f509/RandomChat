@@ -30,8 +30,8 @@ public class ClientSocket {
             return;
         
         new Thread(()-> {
-            final String SERVER_ADR = "snake.switzerlandnorth.cloudapp.azure.com";
-            final int SERVER_PORT = 5200;
+            final String SERVER_ADR = "MyMachineAddress.com"; // This is just an example, provide your server ip address
+            final int SERVER_PORT = 5200; // Provide the port number of the server app
             try {
                 mSocket = new Socket(SERVER_ADR, SERVER_PORT);
                 mSocket.setKeepAlive(true);
