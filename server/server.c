@@ -19,7 +19,7 @@ int main(int argc, char** argv) {
 
   printf("Starting server...\n");
 
-  const char* ip = "10.0.0.4";
+  const char* ip = "10.0.0.4"; // This is just an example, change the ip string
   int port = atoi(argv[1]);
 
   pthread_t tid;
