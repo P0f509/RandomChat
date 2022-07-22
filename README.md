@@ -14,15 +14,16 @@ In case there are no users in a room, the server stops the search after a defaul
 ## Set up the server
 
 The first task is changing the ***ip String*** in the server.c file (line 22): you have to provide the ip-address of the machine you are using to run the server.
+Follow the following commands to compile and run the server. Notice you must provide a port number as argument of C programm  
 
 ### Compilation
 
-'''console
+```console
 gcc -pthread -o server server.c connection.c
-'''
-
+```
 ### Execution
 
-'''console
+```console
 ./server <port number>
-'''
+```
+
