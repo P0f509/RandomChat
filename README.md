@@ -15,14 +15,14 @@ In case there are no users in a room, the server stops the search after a defaul
 
 Messages exchanged beetween client and server respects a communication protocol at Application Layer based on TCP/IP. In short, client sends a command to the server from the following list:
 
-- **SRC -room number** 
-  (search an enduser in the specified room)
-- **SND -message length -message** 
-  (send the message to the associated enduser)
+- **SRC  -room number** 
+    (search an enduser in the specified room)
+- **SND  -message length  -message** 
+    (send the message to the associated enduser)
 - **LVE** 
-  (leave the current chat)
+    (leave the current chat)
 - **QIT** 
-  (stop the search and leave the current room)
+    (stop the search and leave the current room)
 
 Server replies to the client with a responseCode and an optional body, depending on the case. 
 For other information, to inspect how the protocol works, you can read the documentation, available in Italian.
