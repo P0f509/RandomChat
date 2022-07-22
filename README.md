@@ -15,12 +15,14 @@ In case there are no users in a room, the server stops the search after a defaul
 
 The first task is changing the ***ip String*** in the server.c file (line 22): you have to provide the ip-address of the machine you are using to run the server.
 
-###Compilation
-'''bash
+### Compilation
+
+'''console
 gcc -pthread -o server server.c connection.c
 '''
 
-###Execution
-'''bash
+### Execution
+
+'''console
 ./server <port number>
 '''
