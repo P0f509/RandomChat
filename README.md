@@ -1,6 +1,6 @@
 # RandomChat
 
-This is a college project for Operative System course, composite of two components: An Android Client developed using JAVA and a server developed in C using Unix libraries. Essentially, the project is an application for messagging with other people, based on topic rooms. After users choose a room, the server will randomly match users in the same room.
+This is a college project for Operative System course, composite of two components: An Android Client developed using JAVA and a server developed in C using Unix libraries. Essentially, the project is an application for messagging with other people, based on topic rooms. After an user chooses a room, the server will randomly match the user with other client in the choosen room, to start a chat.
 
 Examples of topic rooms:
 - *Games*
@@ -9,7 +9,7 @@ Examples of topic rooms:
 - *Sport*
 and so on
 
-In case there are no users in a room, the server stops the search after a default time of 60 seconds, but at any time users can stop the search for other users to start a chat.
+In case there are no users in a room, the server stops the search after a default time of 60 seconds, but at any time users can stop the search.
 
 ## Communication protocol
 
