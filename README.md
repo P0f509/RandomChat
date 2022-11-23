@@ -1,6 +1,6 @@
 # RandomChat
 
-This is a college project for Operative System course, composite of two components: An Android Client developed using JAVA and a server developed in C using Unix libraries. Essentially, the project is an application for messagging with other people, based on topic rooms. After an user chooses a room, the server will randomly match the user with other client in the choosen room, to start a chat.
+This is a college project for Operative System course, composite of two components: An Android Client developed using JAVA and a server developed in C using Unix libraries. The project is an application for messagging with other people, based on topic rooms: an user chooses a room and then the server will randomly match the user with other client in the choosen room, in order to start a chat.
 
 Examples of topic rooms:
 - *Games*
@@ -13,11 +13,11 @@ In case there are no users in a room, the server stops the search after a defaul
 
 ## Communication protocol
 
-Messages exchanged beetween client and server respects a communication protocol at Application Layer based on TCP/IP. In short, client sends a command to the server from the following list:
+Messages exchanged beetween client and server respect a communication protocol at Application Layer based on TCP/IP. In short, client sends a command to the server from the following list:
 
 - **SRC  -room number** 
     (search an enduser in the specified room)
-- **SND  -message length  -message** 
+- **SND  -message_length  -message** 
     (send the message to the associated enduser)
 - **LVE** 
     (leave the current chat)
@@ -30,7 +30,7 @@ For other information, to inspect how the protocol works, you can read the docum
 ## Set up the C server
 
 The first task is changing the ***ip String*** in the server.c file (line 22): you have to provide the ip-address of the machine you are using to run the server.
-Follow the following commands to compile and run the server. Notice you must provide a port number as argument of C programm.
+Follow the commands to compile and run the server. Notice you must provide a port number as argument of C programm.
 
 ### Compilation
 
